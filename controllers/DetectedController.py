@@ -76,7 +76,9 @@ def get_histories():
 def get_black_lists():
     try:
         if check_api_key():
-            result = BlackListService.get_black_list()
+            # get bl_group_id from query params
+            bl_group_id = request.args.get('bl_group_id')
+            result = BlackListService.get_black_list(bl_group_id)
             data = {
                 'urls': result
             }
@@ -90,11 +92,23 @@ def update_black_lists():
     try:
         if check_api_key():
             data = request.json
+            
             print(f'data',data)
             list_urls = data['urls']
+            data_bl_group = data['data_bl_group']
             print(f'list_urls',list_urls)
             #convert to array
-            result = BlackListService.update_black_list(list_urls)
+            result = BlackListService.update_black_list(list_urls,data_bl_group)
+            return make_response(jsonify(result, 200))
+        else:
+            return make_response(jsonify("API key is invalid", 400))
+    except Exception as e:
+        return make_response(jsonify(str(e), 400))
+@selenium.route('/get_all_bl_groups', methods=['GET'])
+def get_bl_groups():
+    try:
+        if check_api_key():
+            result = BlackListService.get_all_bl_groups()
             return make_response(jsonify(result, 200))
         else:
             return make_response(jsonify("API key is invalid", 400))

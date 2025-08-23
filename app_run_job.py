@@ -65,7 +65,7 @@ def start_threads(thread_functions, num_threads):
         thread.start()
     return threads
 # Start threads for workers
-# worker_threads = start_threads([run_worker], 1)
+worker_threads = start_threads([run_worker], 1)
 # company_name_threads = start_threads([run_find_company_url], 3)
 if __name__ == "__main__":
     # Start RabbitMQ consumer in a separate thread for local runs

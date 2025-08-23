@@ -13,8 +13,7 @@ class JobHistories(db.Model):
     end_time = db.Column(db.DateTime, nullable=True)
     process_time = db.Column(db.Float, nullable=True)  
     updated_at = db.Column(db.DateTime, nullable=True, onupdate=datetime.utcnow)
-    setting_name = db.Column(db.String, nullable=True)
-
+    setting_name = db.Column(db.String, nullable=True)  # Name of the setting used for this job
 
     def __repr__(self):
         return f'<job_histories {self.url}>'
