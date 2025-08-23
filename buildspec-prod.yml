@@ -1,0 +1,42 @@
+version: 0.2
+env:
+  parameter-store:
+    DOCKER_USER: dockerhub-user
+    DOCKER_TOKEN: dockerhub-token
+phases:
+  pre_build:
+    commands:
+      - echo $DOCKER_TOKEN | docker login -u $DOCKER_USER --password-stdin
+  build:
+    commands:
+      - env
+      - ls -la
+      - aws --version
+      - aws ecr get-login-password --region ap-northeast-1 |docker login
+        -u AWS --password-stdin
+        891448626475.dkr.ecr.ap-northeast-1.amazonaws.com
+      - REPOSITORY_URI=891448626475.dkr.ecr.ap-northeast-1.amazonaws.com/auto_complete_form
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - TIMESTAMP=$(date -u +'%Y%m%d%H%M%SZ')
+      - IMAGE_TAG=$TIMESTAMP-${COMMIT_HASH:latest}-prod
+      - docker --version
+      
+      # According to "imageDetail.json File for Amazon ECS Blue/Green Deployment Actions"
+      # The imageDetail.json has to be located at build artifact /imageDetail.json and cannot be located in a sub directory.
+      - printf "[{\"name\":\"auto_complete_form\",\"imageUri\":\"$REPOSITORY_URI:$IMAGE_TAG\"}]" > imagedefinitions.json
+      # - cp .env.prod .env
+      # get env from s3
+      - aws s3 ls s3://auto-complete-tool-bucket/env/ --region ap-northeast-1
+      - aws s3 ls s3://auto-complete-tool-bucket/ --recursive --region ap-northeast-1 | grep env.prod
+      - aws s3 cp s3://auto-complete-tool-bucket/env/env.prod sw_auto_complete_form/auto_jobs/.env --region ap-northeast-1
+      - cp sw_auto_complete_form/auto_jobs/app_auto_complete.py sw_auto_complete_form/auto_jobs/app.py
+      - cd sw_auto_complete_form/auto_jobs
+      - ls -la
+      - docker build --platform linux/amd64 -f Dockerfile -t $REPOSITORY_URI:latest .
+      # - docker build --platform linux/amd64 -f Dockerfile.prod -t $REPOSITORY_URI:latest --build-arg ENV_FILE=.env .
+      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - docker push $REPOSITORY_URI:latest
+artifacts:
+  files:
+    - imagedefinitions.json

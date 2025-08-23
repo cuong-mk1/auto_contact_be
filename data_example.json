@@ -1,0 +1,35 @@
+{
+    "data": {
+        "setting": {
+            "do_not_duplicate_send": false,
+            "do_not_select_check_box": false,
+            "do_not_select_pull_down": false
+        },
+        "data_send": {
+            "company_name": "Công ty TNHH ABC",
+            "department": "Phòng kế toán",
+            "lastname": "Nguyễn",
+            "firstname": "Văn A",
+            "lastname_kana": "Nguyễn",
+            "firstname_kana": "Văn A",
+            "email": "abc@gmail.com",
+            "company_url": "https://abc.com",
+            "number_of_employees": "10",
+            "phone": "0123456789",
+            "zip": "100000",
+            "province": "Hà Nội",
+            "city": "Hà Đông",
+            "address": "Số 1, đường 2, phường 3",
+            "title_question": "Câu hỏi",
+            "content_question": "Nội dung câu hỏi"
+        }, 
+        "list_urls": [
+            "https://www.architec-net.jp/",
+            "https://www.honda-ml.co.jp/",
+            "https://a-time.co.jp",
+            "https://www.heute.life/",
+            "https://harbor-japan.com/",
+            "https://www.ikaruga-s.com/"
+        ]
+    }
+}
