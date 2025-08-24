@@ -13,12 +13,13 @@ services:
         volumes:
             - .:/app
         ports:
-            - "5002:5000"
+            - "5000:5000"
         networks:
             - auto_contact_net
     app_mysql:
         container_name: app_mysql_auto_contact
         image: "mysql/mysql-server:8.0"
+        restart: always
         ports:
             - "3307:3306"
         env_file:
